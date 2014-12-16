@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+  <head>
+    <title>random walker</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="JollyWing(jiqingwu@gmail.com)"/>
+    <meta name="create" content="2014-12-16 Tue"/>
+    <style type="text/css">
+     #screen {border:1px solid #000;}
+    </style>
+    <script>
+     var x = 100;
+     var y = 100;
+     var xspeed = 11;
+     var yspeed = 10;
+     var timeOut;
+     var scr, width, height, context;
+
+     function initScr(){
+       scr = document.getElementById('screen');
+       width = scr.width;
+       height = scr.height;
+       context = scr.getContext('2d');
+       context.strokeStyle="red";
+     }
+
+     function walk(){
+
+       x = x + xspeed;
+       y = y + yspeed;
+
+       if(x > width - 2 || x < 2){
+         xspeed = xspeed * -1;
+       }
+       if(y > height - 2 || y < 2){
+         yspeed = yspeed * -1;
+       }
+
+       console.log(x + ',' + y);
+
+       context.arc(x, y, 2, 0, 2*Math.PI);
+       context.stroke();
+
+       timeOut = setTimeout('walk()', 200);
+     }
+
+     function stopWalk(){
+       clearTimeout(timeOut);
+     }
+    </script>
+  </head>
+  <body onload='initScr()'>
+    <p>
+    <canvas id="screen" width="640" height="480"></canvas>
+    </p>
+    <input type="button" value='Start' onclick='walk()'/>
+    <input type="button" value='Stop' onclick='stopWalk()' />
+  </body>
+</html>
