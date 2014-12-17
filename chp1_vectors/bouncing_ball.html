@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>random walker</title>
+    <title>bouncing ball</title>
     <meta charset="utf-8" />
     <meta name="author" content="JollyWing(jiqingwu@gmail.com)"/>
     <meta name="create" content="2014-12-16 Tue"/>
@@ -9,10 +9,30 @@
      #screen {border:1px solid #000;}
     </style>
     <script>
-     var x = 100;
-     var y = 100;
-     var xspeed = 11;
-     var yspeed = 10;
+     var sprite = {
+       x:100,
+       y:100,
+       xspeed:11,
+       yspeed:10,
+       radius:2,
+       move:function(canvasWidth, canvasHeight){
+         this.x = this.x + this.xspeed;
+         this.y = this.y + this.yspeed;
+
+         if(this.x > canvasWidth - this.radius || this.x < this.radius){
+           this.xspeed = this.xspeed * -1;
+         }
+         if(this.y > canvasHeight - this.radius || this.y < this.radius){
+           this.yspeed = this.yspeed * -1;
+         }
+
+       },
+       draw:function(context){
+         context.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
+         context.stroke();
+       }
+     };
+
      var timeOut;
      var scr, width, height, context;
 
@@ -25,21 +45,9 @@
      }
 
      function walk(){
+       sprite.move(width, height);
 
-       x = x + xspeed;
-       y = y + yspeed;
-
-       if(x > width - 2 || x < 2){
-         xspeed = xspeed * -1;
-       }
-       if(y > height - 2 || y < 2){
-         yspeed = yspeed * -1;
-       }
-
-       console.log(x + ',' + y);
-
-       context.arc(x, y, 2, 0, 2*Math.PI);
-       context.stroke();
+       sprite.draw(context);
 
        timeOut = setTimeout('walk()', 200);
      }
