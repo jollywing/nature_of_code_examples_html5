@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Mover following mouse</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="JollyWing(jiqingwu@gmail.com)"/>
+    <meta name="create" content="2014-12-17 Wed"/>
+    <style type="text/css">
+     #screen {border:1px solid #000;}
+    </style>
+    <script>
+     var mover = {
+       x:100,
+       y:100,
+       targetX:100,
+       targetY:100,
+       xspeed:11,
+       yspeed:10,
+       radius:2,
+       init:function(canvasWidth, canvasHeight){
+         this.x = canvasWidth / 2;
+         this.y = canvasHeight / 2;
+         this.xspeed = 0;
+         this.yspeed = 0;
+         console.log(this.x + ',' + this.y);
+       },
+
+       move:function(canvasWidth, canvasHeight){
+         this.xspeed += (this.targetX - this.x)/10;
+         this.yspeed += (this.targetY - this.y)/10;
+         console.log(this.xspeed + ',' + this.yspeed);
+         this.x = this.x + this.xspeed;
+         this.y = this.y + this.yspeed;
+
+         if(this.x > canvasWidth - this.radius){
+           this.x = this.radius;
+         }
+         else if(this.x < this.radius) {
+           this.x = canvasWidth - this.radius;
+         }
+         if(this.y > canvasHeight - this.radius){
+           this.y = this.radius;
+         }
+         else if(this.y < this.radius) {
+           this.y = canvasHeight - this.radius;
+         }
+       },
+
+       draw:function(context){
+         context.moveTo(this.x, this.y);
+         context.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
+         context.stroke();
+       }
+     };
+
+     var timeOut;
+     var scr, width, height, top, left, context;
+
+     function initScr(){
+       scr = document.getElementById('screen');
+       width = scr.width;
+       height = scr.height;
+       top = scr.getBoundingClientRect().top;
+       left = scr.getBoundingClientRect().left;
+       console.log(left + ',' + top);
+       context = scr.getContext('2d');
+       context.strokeStyle="red";
+     }
+
+     function walk(){
+       mover.move(width, height);
+       mover.draw(context);
+       timeOut = setTimeout('walk()', 200);
+       // console.log(mover.x + ',' + mover.y);
+     }
+
+     function stopWalk(){
+       clearTimeout(timeOut);
+     }
+
+     function init(){
+       initScr();
+       mover.init(width, height);
+     }
+
+     function setTarget(event){
+       mover.targetX = event.clientX - left;
+       mover.targetY = event.clientY - top;
+       console.log(mover.targetX + ',' + mover.targetY);
+     }
+    </script>
+  </head>
+  <body onload='init()'>
+    <p>
+    <canvas id="screen" width="640" height="480"
+            onmouseover='setTarget(event)'></canvas>
+    </p>
+    <input type="button" value='Start' onclick='walk()'/>
+    <input type="button" value='Stop' onclick='stopWalk()' />
+  </body>
+</html>
